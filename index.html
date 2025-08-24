@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AR Камера</title>
-  <!-- 🔥 Важливо: видалено пробіли в кінці src -->
+  <!-- Оновлено: Використовуємо актуальну версію AR.js -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="https://unpkg.com/aframe-ar@1.9.0/dist/aframe-ar.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -65,7 +65,7 @@
   <!-- Приховане аудіо -->
   <audio id="arAudio" src="ar-audio.mp3"></audio>
 
-  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono; trackingMethod: best;">
+  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono; trackingMethod: best; debugUIEnabled: false;" vr-mode-ui="enabled: false">
     <a-marker id="marker" type="pattern" url="marker.patt">
       <!-- Зображення замість відео -->
       <a-image id="arImage" src="image.png" position="0 0 0" rotation="-90 0 0" width="1.33" height="1"></a-image>
