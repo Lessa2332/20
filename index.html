@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>AR Камера</title>
-  <!-- Оновлено: Використовуємо актуальну версію AR.js -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://unpkg.com/aframe-ar@1.9.0/dist/aframe-ar.js"></script>
   <style>
@@ -62,12 +62,10 @@
 
   <div id="scanText">Наведи на зображення</div>
 
-  <!-- Приховане аудіо -->
   <audio id="arAudio" src="ar-audio.mp3"></audio>
 
-  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono; trackingMethod: best; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono; debugUIEnabled: true;">
     <a-marker id="marker" type="pattern" url="marker.patt">
-      <!-- Зображення замість відео -->
       <a-image id="arImage" src="image.png" position="0 0 0" rotation="-90 0 0" width="1.33" height="1"></a-image>
     </a-marker>
     <a-entity camera></a-entity>
@@ -82,29 +80,25 @@
     const arImage = document.getElementById('arImage');
     const arAudio = document.getElementById('arAudio');
 
-    // При завантаженні маркера — приховати підказку, показати зображення, відтворити аудіо
     marker.addEventListener('markerFound', () => {
       scanText.style.display = 'none';
       arImage.setAttribute('visible', true);
       arAudio.play().catch(e => console.log('Аудіо не відтворилось:', e));
     });
 
-    // При втраті маркера — приховати зображення, зупинити аудіо
     marker.addEventListener('markerLost', () => {
       scanText.style.display = 'block';
       arImage.setAttribute('visible', false);
       arAudio.pause();
-      arAudio.currentTime = 0; // скинути, якщо потрібно
+      arAudio.currentTime = 0;
     });
 
-    // Фікс висоти для мобільних
     function fixHeight() {
       document.body.style.height = window.innerHeight + 'px';
     }
     window.addEventListener('resize', fixHeight);
     fixHeight();
 
-    // 🔒 Перевірка HTTPS
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
       alert('⚠️ AR працює тільки через HTTPS або localhost!');
     }
