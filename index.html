@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>AR Камера</title>
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/aframe-ar@1.9.0/dist/aframe-ar.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -16,7 +15,6 @@
       overflow: hidden;
       touch-action: none;
       font-family: Arial, sans-serif;
-      background: #000;
     }
     a-scene {
       width: 100% !important;
@@ -59,14 +57,14 @@
   </style>
 </head>
 <body>
-
   <div id="scanText">Наведи на зображення</div>
 
+  <!-- Приховане аудіо -->
   <audio id="arAudio" src="ar-audio.mp3"></audio>
 
-  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono; debugUIEnabled: true;">
+  <a-scene embedded id="arScene" arjs="sourceType: webcam; detectionMode: mono; trackingMethod: best;">
     <a-marker id="marker" type="pattern" url="marker.patt">
-      <a-image id="arImage" src="image.png" position="0 0 0" rotation="-90 0 0" width="1.33" height="1"></a-image>
+      <a-image id="arImage" src="image.png" position="0 0 0" rotation="-90 0 0" width="1.33" height="1" visible="false"></a-image>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
@@ -82,26 +80,23 @@
 
     marker.addEventListener('markerFound', () => {
       scanText.style.display = 'none';
-      arImage.setAttribute('visible', true);
-      arAudio.play().catch(e => console.log('Аудіо не відтворилось:', e));
+      arImage.setAttribute('visible', true); // Показати зображення
+      arAudio.play().catch(e => console.log('Помилка відтворення аудіо:', e)); // Обробка помилок аудіо
     });
 
     marker.addEventListener('markerLost', () => {
       scanText.style.display = 'block';
-      arImage.setAttribute('visible', false);
+      arImage.setAttribute('visible', false); // Приховати зображення
       arAudio.pause();
-      arAudio.currentTime = 0;
+      arAudio.currentTime = 0; // Скинути аудіо до початку
     });
 
+    // Фікс висоти для мобільних браузерів
     function fixHeight() {
       document.body.style.height = window.innerHeight + 'px';
     }
     window.addEventListener('resize', fixHeight);
     fixHeight();
-
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-      alert('⚠️ AR працює тільки через HTTPS або localhost!');
-    }
   </script>
 </body>
 </html>
